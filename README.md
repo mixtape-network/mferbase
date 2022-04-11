@@ -9,7 +9,7 @@ mferbase is the entire mfers NFT Universe stored in a single Git repository. It'
 
 All of the above stored and downloadable with a single `git clone`.
 
-- Try the Demo: https://mixtape-network.gitlab.io/mferbase
+- Try the Demo: https://mixtape-network.github.io/mferbase
 - Stay updated or ask questions on Twitter: https://twitter.com/skogard
 - Ask questions in Discord: https://discord.gg/BZtp5F6QQM
 
@@ -57,9 +57,9 @@ Simply clone this git repository and it contains all the IPFS files for the mfer
 
 mferbase comes with a built-in query engine web app at [index.html](index.html)
 
-Everything is loaded directly from the Gitlab pages built from this repository, serverlessly ([even the DB](mixtape.db) thanks to [sql.js](https://sql.js.org/documentation/)!) 
+Everything is loaded directly from the Github pages built from this repository, serverlessly ([even the DB](mixtape.db) thanks to [sql.js](https://sql.js.org/documentation/)!) 
 
-You can try the web app at https://mixtape-network.gitlab.io/mferbase
+You can try the web app at https://mixtape-network.github.io/mferbase
 
 ---
 
@@ -70,7 +70,7 @@ You can try the web app at https://mixtape-network.gitlab.io/mferbase
 First, clone this repository by running:
 
 ```
-git clone https://gitlab.com/mixtape-network/mferbase.git
+git clone https://github.com/mixtape-network/mferbase.git
 ```
 
 ## 2. Try the query web app
@@ -94,7 +94,7 @@ It will start a server at http://localhost:8080 and when you visit, you will be 
 
 # Usage
 
-Everything in this git repository is also served over a static website. This repository is made up of largely 3 components, all of which are also published over Gitlab pages:
+Everything in this git repository is also served over a static website. This repository is made up of largely 3 components, all of which are also published over Github pages:
 
 1. **Metadata DB:** Stored in a single SQLite3 db file: [mixtape.db](mixtape.db)
 2. **NFT Files:** Stored under the [ipfs](ipfs) folder
@@ -111,4 +111,4 @@ All the IPFS image files are stored under the [ipfs](ipfs) folder, **with their 
 
 ## Web
 
-The built-in website lets you quickly query the DB at https://mixtape-network.gitlab.io/mferbase WITHOUT a server. Everything is loaded from the static page, **including the [mixtape.db](mixtape.db) DB.**
+The built-in website lets you quickly query the DB at https://mixtape-network.github.io/mferbase WITHOUT a server. Everything is loaded from the static page, **including the [mixtape.db](mixtape.db) DB.**
