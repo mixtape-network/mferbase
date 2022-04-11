@@ -13,6 +13,21 @@
 <meta property="og:description" content="The entire mfers NFT universe in a single Git repository." />
 <meta property="og:image" content="https://mferbase.mixtape.network/mixtape.png" />
 <style>
+@font-face {
+    font-family: 'visitor_tt1_brkregular';
+    src: url('visitor1-webfont.woff2') format('woff2'),
+         url('visitor1-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+@font-face {
+    font-family: 'visitor_tt2_brkregular';
+    src: url('visitor2-webfont.woff2') format('woff2'),
+         url('visitor2-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
 body {
   font-family: Sans-serif;
   margin: 0;
@@ -45,7 +60,10 @@ textarea {
   box-sizing: border-box;
 }
 nav a {
+  font-family: 'visitor_tt1_brkregular', sans-serif;
+  /*
   letter-spacing: -3px;
+  */
   text-decoration: none;
   font-size: 40px;
   font-weight: bold;
@@ -55,10 +73,14 @@ nav a {
 }
 nav td:nth-child(1) {
   width: 100px;
+  font-weight: bold;
+  text-align: right;
+  vertical-align: middle;
 }
 nav table {
   max-width: 800px;
   margin: 0 auto;
+  width: 90%;
 }
 nav td {
   background: none;
@@ -107,11 +129,13 @@ td {
   cursor: pointer;
   padding: 10px;
   max-width: 800px;
-  width: 100%;
+  width: 90%;
   box-sizing: border-box;
   color: white;
   border-radius: 4px;
   border:none;
+  font-size: 20px;
+  font-family: 'visitor_tt1_brkregular', sans-serif;
 }
 .btn {
   font-family: Sans-serif;
