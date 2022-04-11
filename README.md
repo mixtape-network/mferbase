@@ -9,7 +9,7 @@ mferbase is the entire mfers NFT Universe stored in a single Git repository. It'
 
 All of the above stored and downloadable with a single `git clone`.
 
-- Try the Demo: https://mferbase.papercorp.org
+- Try the Demo: https://mferbase.mixtape.network
 - Stay updated or ask questions on Twitter: https://twitter.com/skogard
 - Ask questions in Discord: https://discord.gg/BZtp5F6QQM
 
@@ -59,7 +59,7 @@ mferbase comes with a built-in query engine web app at [index.html](index.html)
 
 Everything is loaded directly from the Github pages built from this repository, serverlessly ([even the DB](mixtape.db) thanks to [sql.js](https://sql.js.org/documentation/)!) 
 
-You can try the web app at https://mferbase.papercorp.org
+You can try the web app at https://mferbase.mixtape.network
 
 ---
 
@@ -111,4 +111,4 @@ All the IPFS image files are stored under the [ipfs](ipfs) folder, **with their 
 
 ## Web
 
-The built-in website lets you quickly query the DB at https://mferbase.papercopr.org WITHOUT a server. Everything is loaded from the static page, **including the [mixtape.db](mixtape.db) DB.**
+The built-in website lets you quickly query the DB at https://mferbase.mixtape.network WITHOUT a server. Everything is loaded from the static page, **including the [mixtape.db](mixtape.db) DB.**
