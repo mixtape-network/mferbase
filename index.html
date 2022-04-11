@@ -1,0 +1,256 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {
+  font-family: Sans-serif;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+nav {
+  text-align: center;
+  background: rgba(0,0,0,0.9);
+  padding: 20px;
+  color: white;
+}
+.sub {
+  font-size: 14px;
+}
+input[type=text] {
+  width: 100%;
+  padding: 5px;
+  box-sizing: border-box;
+  background: white;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+textarea {
+  width: 100%;
+  height: 50px;
+  background: white;
+  border: 1px solid rgba(0,0,0,0.1);
+  padding: 5px;
+  box-sizing: border-box;
+}
+nav a {
+  letter-spacing: -1px;
+  text-decoration: none;
+  color: black;
+  font-size: 30px;
+  font-weight: bold;
+  display: inline-block;
+  padding: 20px;
+  font-family: Georgia;
+  font-style: italic;
+  color: white;
+}
+nav td:nth-child(1) {
+  width: 100px;
+}
+nav table {
+  max-width: 800px;
+  margin: 0 auto;
+}
+nav td {
+  background: none;
+  color: white;
+}
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 20px 0;
+  background: rgba(0,0,255,0.04);
+}
+.item {
+  width: 200px;
+  padding: 5px;
+  box-sizing: border-box;
+}
+.item img {
+  width: 100%;
+}
+table {
+  table-layout: fixed;
+  width: 100%;
+  border-spacing: 0;
+}
+td {
+  background: white;
+  vertical-align: top;
+  word-wrap:break-word;
+  padding: 7px;
+  box-sizing: border-box;
+  font-size: 13px;
+  cursor: pointer;
+}
+.container td:nth-child(1) {
+  font-weight: bold;
+}
+.container td {
+  border-bottom: 2px solid rgba(0,0,255,0.04);
+}
+.container tr:hover td {
+  background: lavender;
+}
+#query {
+  margin-top: 5px;
+  background: rgba(255,255,255,0.1);
+  cursor: pointer;
+  padding: 10px;
+  max-width: 800px;
+  width: 100%;
+  box-sizing: border-box;
+  color: white;
+  border-radius: 4px;
+  border:none;
+}
+.btn {
+  font-family: Sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  letter-spacing: 0;
+  background: rgba(255,255,255,0.1);
+  color: white;
+  padding: 5px 10px;
+  margin: 20px 0;
+  border-radius: 2px;
+}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.6.1/sql-wasm.js"></script>
+<script>
+class Loader {
+  async init() {
+    const sqlPromise = initSqlJs({
+      locateFile: file => "https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.6.1/sql-wasm.wasm"
+    });
+    const dataPromise = fetch("mixtape.db").then(res => res.arrayBuffer());
+    const [SQL, buf] = await Promise.all([sqlPromise, dataPromise])
+    this.db = new SQL.Database(new Uint8Array(buf));
+  }
+  next() {
+    let select = document.querySelector("#select").value
+    if (select.length === 0) {
+      select = "*"
+    } else {
+      if (select !== "*") {
+        if (!/.*image.*/.test(select)) {
+          select = select + ", image"
+        }
+        if (!/.*id.*/.test(select)) {
+          select = select + ", id"
+        }
+        if (!/.*uri.*/.test(select)) {
+          select = select + ", uri"
+        }
+      }
+    }
+    let where = document.querySelector("#where").value
+    let limit = parseInt(document.querySelector("#limit").value)
+    let sql = `SELECT ${select} FROM metadata`
+    if (where.length > 0) {
+      sql += ` WHERE ${where}`
+    }
+    if (limit > 0) {
+      sql += ` LIMIT ${limit}`
+    } else {
+      sql += " LIMIT 200"
+    }
+    const contents = this.db.exec(sql)
+    let index = 0;
+    let columns = []
+    for(let column of contents[0].columns) {
+      columns.push(column)
+    }
+    let properties = []
+    for(let i=0; i<contents[0].values.length; i++) {
+      let values = contents[0].values[i];
+      let o = { attributes: {} }
+      for(let j=0; j<columns.length; j++) {
+        let column = columns[j]
+        if (["id", "name", "description", "image", "blockHash", "blockNumber", "self", "transactionHash", "uri"].includes(column)) {
+          o[column] = values[j]
+        } else {
+          o.attributes[column] = values[j]
+        }
+      }
+      properties.push(o)
+    }
+    let html = properties.map((p) => {
+      let attributes = p.attributes
+      let keys = Object.keys(attributes)
+      let table = keys.map((key) => {
+        return `<tr class='row' data-key='${key}' data-val='${attributes[key]}'><td>${key}</td><td>${attributes[key]}</td></tr>`
+      }).join("")
+      let img
+      if (p.image.startsWith("http")) {
+        img = "files/" + p.image.split("")
+          .map(c => c.charCodeAt(0).toString(16).padStart(2, "0"))
+          .join("");
+      } else {
+        img = "ipfs/" + p.image.replace("ipfs://", "")
+      }
+
+      return `<div class='item'>
+<img src="${img}">
+<table>${table}</table>
+</div>`
+    }).join("")
+    document.querySelector(".container").innerHTML = html
+  }
+}
+document.addEventListener("DOMContentLoaded", async () => {
+  const loader = new Loader()
+  await loader.init()
+  loader.next()
+  document.querySelector("#query").addEventListener("click", () => {
+    loader.next()
+  })
+  document.querySelector(".container").addEventListener("click", (e) => {
+    let target = (e.target.className === "row" ? e.target : (e.target.closest(".row") ? e.target.closest(".row") : null))
+    if (target) {
+      let key = target.getAttribute('data-key')
+      let val = target.getAttribute('data-val')
+      let where = document.querySelector("#where").value
+      if (where.trim().length > 0) {
+        document.querySelector("#where").value = `${where} AND\n"${key}" = "${val}"`
+      } else {
+        document.querySelector("#where").value = `"${key}" = "${val}"`
+      }
+      loader.next()
+    }
+  })
+})
+</script>
+</head>
+<body>
+<nav>
+  <a href="/">mferbase</a>
+  <div class='sub'>The entire mfers NFT universe in a single Git repository.</div>
+  <div>
+    <a class='btn' href="https://github.com/skogard/mferbase">Download</a>
+    <a class='btn' href="https://twitter.com/skogard">Twitter</a>
+  </div>
+  <table>
+    <tr>
+      <td>SELECT</td>
+      <td><input id='select' type='text' placeholder='select columns' value='*'></td>
+    </tr>
+    <tr>
+      <td>FROM</td>
+      <td>metadata</td>
+    </tr>
+    <tr>
+      <td>WHERE</td>
+      <td><textarea id='where' placeholder='where condition'></textarea></td>
+    </tr>
+    <tr>
+      <td>LIMIT</td>
+      <td><input id='limit' type='text' placeholder='limmit' value=200></td>
+    </tr>
+  </table>
+  <button id='query'>Query</button>
+</nav>
+<div class='container'></div>
+</body>
+</html>
