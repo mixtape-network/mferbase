@@ -2,6 +2,8 @@
 
 > The entire mfers NFT universe in a single git repository.
 
+![mferbase.gif](mferbase.gif)
+
 mferbase is the entire mfers NFT Universe stored in a single Git repository. It's made up of:
 
 1. **DB:** The entire metadata database stored in a single [SQLite DB file](mixtape.db)
