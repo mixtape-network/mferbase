@@ -250,43 +250,48 @@ class Loader {
     const contents = this.db.exec(sql)
     let index = 0;
     let columns = []
-    for(let column of contents[0].columns) {
-      columns.push(column)
-    }
-    let properties = []
-    for(let i=0; i<contents[0].values.length; i++) {
-      let values = contents[0].values[i];
-      let o = { attributes: {} }
-      for(let j=0; j<columns.length; j++) {
-        let column = columns[j]
-        if (["id", "name", "description", "image", "blockHash", "blockNumber", "self", "transactionHash", "uri"].includes(column)) {
-          o[column] = values[j]
-        } else {
-          o.attributes[column] = values[j]
+    var html = ""
+    if (contents.length === 0) {
+      html = "No results"
+    } else {
+      for(let column of contents[0].columns) {
+        columns.push(column)
+      }
+      let properties = []
+      for(let i=0; i<contents[0].values.length; i++) {
+        let values = contents[0].values[i];
+        let o = { attributes: {} }
+        for(let j=0; j<columns.length; j++) {
+          let column = columns[j]
+          if (["id", "name", "description", "image", "blockHash", "blockNumber", "self", "transactionHash", "uri"].includes(column)) {
+            o[column] = values[j]
+          } else {
+            o.attributes[column] = values[j]
+          }
         }
+        properties.push(o)
       }
-      properties.push(o)
-    }
-    let html = properties.map((p) => {
-      let attributes = p.attributes
-      let keys = Object.keys(attributes)
-      let table = keys.map((key) => {
-        return `<tr class='row' data-key='${key}' data-val='${attributes[key]}'><td>${key}</td><td>${attributes[key]}</td></tr>`
-      }).join("")
-      let img
-      if (p.image.startsWith("http")) {
-        img = "files/" + p.image.split("")
-          .map(c => c.charCodeAt(0).toString(16).padStart(2, "0"))
-          .join("");
-      } else {
-        img = "ipfs/" + p.image.replace("ipfs://", "")
-      }
+      html = properties.map((p) => {
+        let attributes = p.attributes
+        let keys = Object.keys(attributes)
+        let table = keys.map((key) => {
+          return `<tr class='row' data-key='${key}' data-val='${attributes[key]}'><td>${key}</td><td>${attributes[key]}</td></tr>`
+        }).join("")
+        let img
+        if (p.image.startsWith("http")) {
+          img = "files/" + p.image.split("")
+            .map(c => c.charCodeAt(0).toString(16).padStart(2, "0"))
+            .join("");
+        } else {
+          img = "ipfs/" + p.image.replace("ipfs://", "")
+        }
 
-      return `<div class='item'>
-<img src="${img}">
-<table>${table}</table>
-</div>`
-    }).join("")
+        return `<div class='item'>
+  <img src="${img}">
+  <table>${table}</table>
+  </div>`
+      }).join("")
+    }
     document.querySelector(".container").innerHTML = html
   }
 }
