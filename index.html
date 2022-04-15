@@ -220,6 +220,8 @@ class Loader {
     this.db = new SQL.Database(new Uint8Array(buf));
   }
   next() {
+    const openseaUrlPrefix = "https://opensea.io/assets"
+    const mfersContractAddress = "0x79fcdef22feed20eddacbb2587640e45491b757f"
     let select = document.querySelector("#select").value
     if (select.length === 0) {
       select = "*"
@@ -287,7 +289,7 @@ class Loader {
         }
 
         return `<div class='item'>
-  <img src="${img}">
+  <a target=”_blank” href="${openseaUrlPrefix}/${mfersContractAddress}/${p["id"]}"><img src="${img}"></a>
   <table>${table}</table>
   </div>`
       }).join("")
